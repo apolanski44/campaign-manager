@@ -8,6 +8,8 @@ import java.util.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Campaign {
