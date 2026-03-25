@@ -59,4 +59,9 @@ public class CampaignService {
 
         return campaignRepository.save(campaign);
     }
+
+    public Campaign getCampaignById(UUID id) {
+        return campaignRepository.findById(id)
+                .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
+    }
 }
