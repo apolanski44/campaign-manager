@@ -1,5 +1,6 @@
 package com.ap.campaign_manager.account;
 
+import com.ap.campaign_manager.campaign.dto.AccountBalanceResponseDto;
 import com.ap.campaign_manager.exception.EmeraldAccountNotFoundException;
 import com.ap.campaign_manager.exception.InsufficientFundsException;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,11 @@ import java.math.BigDecimal;
 public class EmeraldAccountService {
     private final EmeraldAccountRepository emeraldAccountRepository;
 
-    public BigDecimal getAccountBalance() {
-        return emeraldAccountRepository.getBalanceById(AccountConstants.EMERALD_ACCOUNT_ID)
+    public AccountBalanceResponseDto getAccountBalance() {
+        BigDecimal balance =  emeraldAccountRepository.getBalanceById(AccountConstants.EMERALD_ACCOUNT_ID)
                 .orElseThrow(() -> new EmeraldAccountNotFoundException("Account not found"));
+
+        return new AccountBalanceResponseDto(balance);
     }
 
     public EmeraldAccount getAccount() {
