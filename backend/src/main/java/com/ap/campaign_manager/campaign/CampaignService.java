@@ -54,7 +54,7 @@ public class CampaignService {
         Campaign campaign = campaignRepository.findById(id)
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
 
-        emeraldAccountService.adjustFunds(campaign.getCampaignFund(), dto.campaignFund());
+        emeraldAccountService.adjustFunds(dto.campaignFund(), campaign.getCampaignFund());
 
         campaign.setCampaignName(dto.campaignName());
         campaign.setKeywords(new HashSet<>(dto.keywords()));
