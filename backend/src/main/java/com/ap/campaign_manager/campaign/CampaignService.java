@@ -2,6 +2,7 @@ package com.ap.campaign_manager.campaign;
 
 import com.ap.campaign_manager.account.EmeraldAccountService;
 import com.ap.campaign_manager.campaign.dto.CampaignCreationDto;
+import com.ap.campaign_manager.campaign.dto.CampaignResponseDto;
 import com.ap.campaign_manager.campaign.dto.CampaignUpdateDto;
 import com.ap.campaign_manager.exception.CampaignNotFoundException;
 import jakarta.transaction.Transactional;
@@ -19,17 +20,23 @@ public class CampaignService {
     private final CampaignMapper campaignMapper;
     private final EmeraldAccountService emeraldAccountService;
 
-    public List<Campaign> listCampaigns() {
-        return campaignRepository.findAll();
+    public List<CampaignResponseDto> listCampaigns() {
+        List<Campaign> campaigns = campaignRepository.findAll();
+
+        return campaigns.stream()
+                .map(campaignMapper::toResponseDto)
+                .toList();
     }
 
     @Transactional
-    public Campaign createCampaign(CampaignCreationDto dto) {
-        emeraldAccountService.reserveFunds(dto.getCampaignFund());
+    public CampaignResponseDto createCampaign(CampaignCreationDto dto) {
+        emeraldAccountService.reserveFunds(dto.campaignFund());
 
         Campaign campaign = campaignMapper.toEntity(dto);
 
-        return campaignRepository.save(campaign);
+        Campaign savedCampaign = campaignRepository.save(campaign);
+
+        return campaignMapper.toResponseDto(savedCampaign);
     }
 
     @Transactional
@@ -43,25 +50,29 @@ public class CampaignService {
     }
 
     @Transactional
-    public Campaign updateCampaign(CampaignUpdateDto dto, UUID id) {
+    public CampaignResponseDto updateCampaign(CampaignUpdateDto dto, UUID id) {
         Campaign campaign = campaignRepository.findById(id)
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
 
-        emeraldAccountService.adjustFunds(campaign.getCampaignFund(), dto.getCampaignFund());
+        emeraldAccountService.adjustFunds(campaign.getCampaignFund(), dto.campaignFund());
 
-        campaign.setCampaignName(dto.getCampaignName());
-        campaign.setKeywords(new HashSet<>(dto.getKeywords()));
-        campaign.setBidAmount(dto.getBidAmount());
-        campaign.setCampaignFund(dto.getCampaignFund());
-        campaign.setStatus(dto.getStatus());
-        campaign.setTown(dto.getTown());
-        campaign.setRadius(dto.getRadius());
+        campaign.setCampaignName(dto.campaignName());
+        campaign.setKeywords(new HashSet<>(dto.keywords()));
+        campaign.setBidAmount(dto.bidAmount());
+        campaign.setCampaignFund(dto.campaignFund());
+        campaign.setStatus(dto.status());
+        campaign.setTown(dto.town());
+        campaign.setRadius(dto.radius());
 
-        return campaignRepository.save(campaign);
+        Campaign savedCampaign = campaignRepository.save(campaign);
+
+        return campaignMapper.toResponseDto(savedCampaign);
     }
 
-    public Campaign getCampaignById(UUID id) {
-        return campaignRepository.findById(id)
+    public CampaignResponseDto getCampaignById(UUID id) {
+        Campaign campaign =  campaignRepository.findById(id)
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
+
+        return campaignMapper.toResponseDto(campaign);
     }
 }

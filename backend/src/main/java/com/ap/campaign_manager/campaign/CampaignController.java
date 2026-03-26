@@ -1,6 +1,7 @@
 package com.ap.campaign_manager.campaign;
 
 import com.ap.campaign_manager.campaign.dto.CampaignCreationDto;
+import com.ap.campaign_manager.campaign.dto.CampaignResponseDto;
 import com.ap.campaign_manager.campaign.dto.CampaignUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,17 @@ public class CampaignController {
     private final CampaignService campaignService;
 
     @GetMapping
-    public List<Campaign> getAll() {
+    public List<CampaignResponseDto> getAll() {
         return campaignService.listCampaigns();
     }
 
     @GetMapping("/{id}")
-    public Campaign getById(@PathVariable UUID id) {
+    public CampaignResponseDto getById(@PathVariable UUID id) {
         return campaignService.getCampaignById(id);
     }
 
     @PutMapping("/{id}")
-    public Campaign update(@PathVariable UUID id, @RequestBody @Valid CampaignUpdateDto dto) {
+    public CampaignResponseDto update(@PathVariable UUID id, @RequestBody @Valid CampaignUpdateDto dto) {
         return campaignService.updateCampaign(dto, id);
     }
 
@@ -38,7 +39,7 @@ public class CampaignController {
     }
 
     @PostMapping
-    public Campaign create(@RequestBody @Valid CampaignCreationDto dto) {
+    public CampaignResponseDto create(@RequestBody @Valid CampaignCreationDto dto) {
         return campaignService.createCampaign(dto);
     }
 }
