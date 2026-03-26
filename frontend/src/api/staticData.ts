@@ -1,7 +1,7 @@
 import {apiFetch} from "./utils/http.ts";
 
 export function getTowns() {
-    return apiFetch<string[]>('/metadata/towns')
+    return apiFetch<string[]>('/static-data/towns')
 }
 
 export function getKeywordSuggestions(query: string) {
@@ -12,5 +12,5 @@ export function getKeywordSuggestions(query: string) {
     }
 
     const suffix = params.toString() ? `?${params.toString()}` : ''
-    return apiFetch<string[]>(`/metadata/keywords${suffix}`)
+    return apiFetch<string[]>(`/static-data/keywords${suffix}`)
 }
