@@ -20,7 +20,7 @@ public class Campaign {
     @Column(nullable = false)
     private String campaignName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "campaign_keywords", joinColumns = @JoinColumn(name = "campaign_id"))
     @Column(nullable = false, name = "keyword")
     private Set<String> keywords = new HashSet<>();
