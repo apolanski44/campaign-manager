@@ -1,6 +1,6 @@
 package com.ap.campaign_manager.account;
 
-import com.ap.campaign_manager.campaign.dto.AccountBalanceResponseDto;
+import com.ap.campaign_manager.account.dto.AccountBalanceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

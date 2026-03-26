@@ -1,7 +1,4 @@
-package com.ap.campaign_manager.campaign.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+package com.ap.campaign_manager.account.dto;
 
 import java.math.BigDecimal;
 

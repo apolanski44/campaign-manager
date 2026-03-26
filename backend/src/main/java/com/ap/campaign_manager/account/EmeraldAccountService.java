@@ -1,6 +1,6 @@
 package com.ap.campaign_manager.account;
 
-import com.ap.campaign_manager.campaign.dto.AccountBalanceResponseDto;
+import com.ap.campaign_manager.account.dto.AccountBalanceResponseDto;
 import com.ap.campaign_manager.exception.EmeraldAccountNotFoundException;
 import com.ap.campaign_manager.exception.InsufficientFundsException;
 import lombok.RequiredArgsConstructor;
