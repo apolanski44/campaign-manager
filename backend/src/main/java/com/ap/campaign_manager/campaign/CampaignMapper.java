@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 public class CampaignMapper {
     public Campaign toEntity(CampaignCreationDto dto) {
         return Campaign.builder()
-                .campaignName(dto.getCampaignName())
-                .keywords(dto.getKeywords())
-                .bidAmount(dto.getBidAmount())
-                .campaignFund(dto.getCampaignFund())
-                .status(dto.getStatus())
-                .town(dto.getTown())
-                .radius(dto.getRadius())
+                .campaignName(dto.campaignName())
+                .keywords(dto.keywords())
+                .bidAmount(dto.bidAmount())
+                .campaignFund(dto.campaignFund())
+                .status(dto.status())
+                .town(dto.town())
+                .radius(dto.radius())
                 .build();
     }
 }

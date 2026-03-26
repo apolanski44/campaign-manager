@@ -5,8 +5,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Data
-@AllArgsConstructor
-public class AccountBalanceResponseDto {
-    private BigDecimal balance;
+
+public record AccountBalanceResponseDto (
+        BigDecimal balance
+) {
 }
