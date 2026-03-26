@@ -20,11 +20,6 @@ public class EmeraldAccountService {
         return new AccountBalanceResponseDto(balance);
     }
 
-    public EmeraldAccount getAccount() {
-        return emeraldAccountRepository.findById(AccountConstants.EMERALD_ACCOUNT_ID)
-                .orElseThrow(() -> new EmeraldAccountNotFoundException("Account not found"));
-    }
-
     public void reserveFunds(BigDecimal amount) {
         EmeraldAccount emeraldAccount = getAccount();
 
@@ -57,5 +52,10 @@ public class EmeraldAccountService {
         }
 
         releaseFunds(diff.abs());
+    }
+
+    private EmeraldAccount getAccount() {
+        return emeraldAccountRepository.findById(AccountConstants.EMERALD_ACCOUNT_ID)
+                .orElseThrow(() -> new EmeraldAccountNotFoundException("Account not found"));
     }
 }
