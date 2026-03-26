@@ -56,13 +56,7 @@ public class CampaignService {
 
         emeraldAccountService.adjustFunds(dto.campaignFund(), campaign.getCampaignFund());
 
-        campaign.setCampaignName(dto.campaignName());
-        campaign.setKeywords(new HashSet<>(dto.keywords()));
-        campaign.setBidAmount(dto.bidAmount());
-        campaign.setCampaignFund(dto.campaignFund());
-        campaign.setStatus(dto.status());
-        campaign.setTown(dto.town());
-        campaign.setRadius(dto.radius());
+        updateEntityFromDto(campaign, dto);
 
         Campaign savedCampaign = campaignRepository.save(campaign);
 
@@ -74,5 +68,15 @@ public class CampaignService {
                 .orElseThrow(() -> new CampaignNotFoundException("Campaign not found"));
 
         return campaignMapper.toResponseDto(campaign);
+    }
+
+    private void updateEntityFromDto(Campaign entity, CampaignUpdateDto dto) {
+        entity.setCampaignName(dto.campaignName());
+        entity.setKeywords(new HashSet<>(dto.keywords()));
+        entity.setBidAmount(dto.bidAmount());
+        entity.setCampaignFund(dto.campaignFund());
+        entity.setStatus(dto.status());
+        entity.setTown(dto.town());
+        entity.setRadius(dto.radius());
     }
 }
