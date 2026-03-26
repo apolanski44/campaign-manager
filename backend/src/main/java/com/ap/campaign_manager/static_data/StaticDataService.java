@@ -43,7 +43,7 @@ public class StaticDataService {
     }
 
     public List<String> getKeywords(String queryParam) {
-        if (queryParam.isBlank()) {
+        if (queryParam ==null || queryParam.isBlank()) {
             return KEYWORDS;
         }
 
