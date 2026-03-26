@@ -2,6 +2,7 @@ package com.ap.campaign_manager.exception;
 
 import com.ap.campaign_manager.exception.dto.ErrorResponseDto;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,38 +13,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(CampaignNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleCampaignNotFound(CampaignNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponseDto(
-                        HttpStatus.NOT_FOUND.value(),
-                        HttpStatus.NOT_FOUND.getReasonPhrase(),
-                        ex.getMessage(),
-                        null
-                ));
+        log.warn("Campaign not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
     }
 
     @ExceptionHandler(EmeraldAccountNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleEmeraldAccountNotFound(EmeraldAccountNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDto(
-                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                        ex.getMessage(),
-                        null
-                ));
+        log.error("Critical: Emerald account not found! {}", ex.getMessage());
+
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null);
     }
 
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<ErrorResponseDto> handleInsufficientFunds(InsufficientFundsException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponseDto(
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                        ex.getMessage(),
-                        null
-                ));
+        log.warn("Payment failed: {}", ex.getMessage());
+
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -54,34 +43,32 @@ public class GlobalExceptionHandler {
                 validationErrors.put(error.getField(), error.getDefaultMessage())
         );
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponseDto(
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                        "Validation failed",
-                        validationErrors
-                ));
+        log.warn("Validation failed for request: {}", validationErrors);
+
+        return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed", validationErrors);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleConstraintViolation(ConstraintViolationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponseDto(
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                        ex.getMessage(),
-                        null
-                ));
+        log.warn("Constraint violation: {}", ex.getMessage());
+
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        log.error("Unexpected server error: ", ex);
+
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error", null);
+    }
+
+    private ResponseEntity<ErrorResponseDto> buildResponse(HttpStatus status, String message, Map<String, String> details) {
+        return ResponseEntity.status(status)
                 .body(new ErrorResponseDto(
-                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                        "Unexpected server error",
-                        null
+                        status.value(),
+                        status.getReasonPhrase(),
+                        message,
+                        details
                 ));
     }
 }
