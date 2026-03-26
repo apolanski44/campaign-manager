@@ -23,7 +23,7 @@ public class EmeraldAccountService {
     public void reserveFunds(BigDecimal amount) {
         EmeraldAccount emeraldAccount = getAccount();
 
-        if (emeraldAccount.getBalance().compareTo(amount) < 0) {
+        if (!hasSufficientFunds(emeraldAccount.getBalance(), amount)) {
             throw new InsufficientFundsException("Not enough founds in account");
         }
 
@@ -57,5 +57,9 @@ public class EmeraldAccountService {
     private EmeraldAccount getAccount() {
         return emeraldAccountRepository.findById(AccountConstants.EMERALD_ACCOUNT_ID)
                 .orElseThrow(() -> new EmeraldAccountNotFoundException("Account not found"));
+    }
+
+    private boolean hasSufficientFunds(BigDecimal balance, BigDecimal amount) {
+        return balance.compareTo(amount) >= 0;
     }
 }
