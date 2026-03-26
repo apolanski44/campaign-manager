@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class EmeraldAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, precision = 12, scale = 2)
